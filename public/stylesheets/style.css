@@ -27,8 +27,13 @@ table {
   margin-bottom: 2em;
 }
 
-td {
+ul {
+  margin-left: 0px;
+}
+
+li {
   text-transform: uppercase;
+  list-style-type: none;
 }
 
 .red {

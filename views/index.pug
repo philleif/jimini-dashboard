@@ -18,26 +18,12 @@ block content
 
     hr
     h5.label Open Positions:
-    table.table
-      thead
-        tr
-          th Currency
-          th Amount
-          th Price
-          th Total
-          th Timeframe
-          th Time
-          th Exchange
-      tbody
-        - for(position of positions.open)
-          tr
-            td= position.pair
-            td= position.amount
-            td= '$' + position.openPrice
-            td= '$' + (position.amount * position.openPrice)
-            td= position.timeframe
-            td= position.time
-            td= position.exchange
+    .columns
+      .column.col-2
+    #open-positions
+      ul
+        position-list-item(v-for="position in positions", v-bind:position="position")
+    hr
 
     h5.label Latest Closed Positions:
     table.table
@@ -74,3 +60,25 @@ block content
               td= position.timeframe
               td= position.time
               td= position.exchange
+  script.
+    Vue.component('position-list-item', {
+      props: ['position'],
+      template: '<li>{{ position.pair }} {{ position.amount }} @ \
+      ${{ position.open }} (${{ position.amount * position.open }})</li>'
+    })
+
+    var app4 = new Vue({
+      el: '#open-positions',
+      data: {
+        positions: [
+          {
+            pair: 'tNEOUSD',
+            amount: 1,
+            timeframe: '15m',
+            time: '123',
+            open: 121,
+            total: 121
+          }
+        ]
+      }
+    })
