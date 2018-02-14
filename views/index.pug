@@ -1,0 +1,101 @@
+extends layout
+
+block content
+  .container
+    h1 Jimini
+    hr
+    .columns
+      .column.col-4
+        h5.label 24-Hour Performance:
+        #day-summary
+          <status-box></status-box>
+      .divider-vert(data-content='')
+
+      .column.col-4
+        .centered
+          h5.label Overall Performance:
+        #total-summary
+          <status-box></status-box>
+    hr
+    h5.label Open Positions:
+    table.table
+      thead
+        tr
+          th Currency
+          th Amount
+          th Price
+          th Total
+          th Timeframe
+          th Time
+          th Exchange
+      tbody
+        tr
+          td tXRPUSD
+          td 10
+          td $1
+          td $10
+          td 1h
+          td Feb 21 5:00 EST
+          td Bitfinex
+        tr
+          td tXRPUSD
+          td 10
+          td $1
+          td $10
+          td 1h
+          td Feb 21 5:00 EST
+          td Bitfinex
+
+    h5.label Latest Closed Positions:
+    table.table
+      thead
+        tr
+          th Currency
+          th Amount
+          th Price
+          th Total
+          th Timeframe
+          th Time
+          th Exchange
+      tbody
+        tr
+          td tXRPUSD
+          td 10
+          td $1
+          td $10
+          td 1h
+          td Feb 21 5:00 EST
+          td Bitfinex
+        tr
+          td tXRPUSD
+          td 10
+          td $1
+          td $10
+          td 1h
+          td Feb 21 5:00 EST
+          td Bitfinex
+
+  script.
+
+    Vue.component('status-box', {
+      template: '<div><h1><strong>-</strong></h1><h5>-</h5></div>'
+    })
+
+    let todaySummary = new Vue({
+      el: "#day-summary",
+      data: {
+        positions: [#{positions.today}]
+      }
+    })
+
+    let totalSummary = new Vue({
+      el: "#total-summary",
+      data: {
+        positions: [#{positions.today}]
+      }
+    })
+
+
+    $(function() {
+      //console.log(positions);
+    })

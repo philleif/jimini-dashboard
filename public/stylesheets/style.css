@@ -1,0 +1,36 @@
+body {
+  margin: 2em;
+  font-family: 'Roboto Mono', sans-serif;
+  color: #fff;
+  background: #031926;
+}
+
+header {
+  margin-bottom: 2em;
+}
+
+footer {
+  font-family: Helvetica;
+  margin-top: 4em;
+}
+
+h5.label {
+  text-transform: uppercase;
+}
+
+hr {
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+table {
+  margin-bottom: 2em;
+}
+
+.red {
+  color: #f8333c;
+}
+
+.green {
+  color: #44af69;
+}
