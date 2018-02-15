@@ -45,7 +45,7 @@ block content
     let positions = new Vue({
       el: '#positions',
       data: {
-        positions: [],
+        positions: {closed: [], open: []},
         net: 0,
         interval: null,
         time: null,
