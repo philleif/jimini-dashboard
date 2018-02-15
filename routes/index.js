@@ -21,7 +21,6 @@ router.get("/positions", async (req, res, next) => {
       _id: 0
     })
     .sort("-time")
-    .limit(10)
 
   let openPositions = positions.filter(position => position.status === "OPEN")
   let closedPositions = positions.filter(
