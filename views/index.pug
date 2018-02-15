@@ -2,17 +2,16 @@ extends layout
 
 block content
   .container
-    h1 Jimini
-    hr
-    .columns
-      .column.col-4
-        .centered
-          h5.label Overall Performance:
-        #total-summary
-          h1 -
-          h5 -
-    hr
     #positions
+      h1 Jimini
+      hr
+      .columns
+        .column.col-4
+          .centered
+            h5.label Net Profit:
+          #total-summary
+            h1 ${{ net }}
+      hr
       .columns
         .column.col-4
           h5.label Open Positions:
@@ -45,12 +44,17 @@ block content
     let closedPositions = new Vue({
       el: '#positions',
       data: {
-        positions: []
+        positions: [],
+        net: 0
       },
       methods: {
         loadData: function () {
           axios.get('/positions').then(response => {
             this.positions = response.data.positions
+
+            for (let p of this.positions.closed) {
+              this.net += Math.round(p.amount * (p.closePrice - p.openPrice))
+            }
           })
         }
       },
