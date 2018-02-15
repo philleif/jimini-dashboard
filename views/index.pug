@@ -12,18 +12,17 @@ block content
           h1 -
           h5 -
     hr
-    .columns
-      .column.col-4
-        h5.label Open Positions:
-        #open-positions
+    #positions
+      .columns
+        .column.col-4
+          h5.label Open Positions:
           ul
-            open-position-list-item(v-for="position in positions",
+            open-position-list-item(v-for="position in positions.open",
               v-bind:position="position")
-      .column.col-8
-        h5.label Latest Closed Positions:
-        #closed-positions
+        .column.col-8
+          h5.label Latest Closed Positions:
           ul
-            closed-position-list-item(v-for="position in positions",
+            closed-position-list-item(v-for="position in positions.closed",
               v-bind:position="position")
 
   script.
@@ -44,31 +43,14 @@ block content
     })
 
     let closedPositions = new Vue({
-      el: '#closed-positions',
+      el: '#positions',
       data: {
         positions: []
       },
       methods: {
         loadData: function () {
           axios.get('/positions').then(response => {
-            this.positions = response.data.positions.closed
-          })
-        }
-      },
-      created: function () {
-        this.loadData()
-      }
-    })
-
-    let openPositions = new Vue({
-      el: '#open-positions',
-      data: {
-        positions: []
-      },
-      methods: {
-        loadData: function () {
-          axios.get('/positions').then(response => {
-            this.positions = response.data.positions.open
+            this.positions = response.data.positions
           })
         }
       },
