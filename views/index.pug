@@ -3,7 +3,7 @@ extends layout
 block content
   .container
     #positions
-      h1 Jimini
+      h1 {{ time }}
       hr
       .columns
         .column.col-4
@@ -34,7 +34,7 @@ block content
     Vue.component('closed-position-list-item', {
       props: ['position'],
       template: "<li><small class='text-gray'> \
-        {{ Date(position.time) }}</small> <br />\
+        {{ new Date(position.time) }}</small> <br />\
         {{ position.pair }} {{ position.amount }} @ \
         ${{ position.openPrice }}/{{ position.closePrice }} \
         (${{ Math.round(position.amount * (position.closePrice - \
@@ -45,13 +45,16 @@ block content
       el: '#positions',
       data: {
         positions: [],
-        net: 0
+        net: 0,
+        interval: null,
+        time: null
       },
       methods: {
         loadData: function () {
           axios.get('/positions').then(response => {
             this.positions = response.data.positions
-
+            this.time = Date()
+            this.net = 0
             for (let p of this.positions.closed) {
               this.net += Math.round(p.amount * (p.closePrice - p.openPrice))
             }
@@ -60,5 +63,9 @@ block content
       },
       created: function () {
         this.loadData()
+
+        setInterval(function () {
+          this.loadData()
+        }.bind(this), 2500)
       }
     })
