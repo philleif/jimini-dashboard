@@ -5,6 +5,20 @@ const db = require("../lib/db")
 
 const router = express.Router()
 
+router.get("/jobs", async (req, res, next) => {
+  let nextJob = await db.AgendaJob.findOne()
+
+  let now = new Date()
+  let nextTime = new Date(nextJob.nextRunAt)
+  let eta = Math.abs(nextTime.getTime() - now.getTime())
+
+  res.json({
+    jobs: {
+      next: eta
+    }
+  })
+})
+
 /* GET home page. */
 router.get("/positions", async (req, res, next) => {
   let positions = await db.Position.find()

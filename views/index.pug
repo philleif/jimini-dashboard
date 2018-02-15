@@ -5,6 +5,7 @@ block content
     #positions
       h1 Jimini
       h2 {{ time }}
+      h5.text-gray Next run in {{ eta }}
       hr
       .columns
         .column.col-4
@@ -47,7 +48,8 @@ block content
         positions: [],
         net: 0,
         interval: null,
-        time: null
+        time: null,
+        eta: null
       },
       methods: {
         loadData: function () {
@@ -59,6 +61,10 @@ block content
             for (let p of this.positions.closed) {
               this.net += Math.round(p.amount * (p.closePrice - p.openPrice))
             }
+          })
+
+          axios.get('/jobs').then(response => {
+            this.eta = Math.round(response.data.jobs.next/1000) + ' seconds'
           })
         }
       },
