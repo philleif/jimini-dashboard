@@ -7,17 +7,21 @@ const router = express.Router()
 
 /* GET home page. */
 router.get("/positions", async (req, res, next) => {
-  let positions = await db.Position.find().select({
-    pair: 1,
-    amount: 1,
-    timeframe: 1,
-    time: 1,
-    exchange: 1,
-    openPrice: 1,
-    closePrice: 1,
-    status: 1,
-    _id: 0
-  })
+  let positions = await db.Position.find()
+    .select({
+      pair: 1,
+      amount: 1,
+      timeframe: 1,
+      time: 1,
+      exchange: 1,
+      openPrice: 1,
+      closePrice: 1,
+      status: 1,
+      net: 1,
+      _id: 0
+    })
+    .sort("-time")
+    .limit(10)
 
   let openPositions = positions.filter(position => position.status === "OPEN")
   let closedPositions = positions.filter(

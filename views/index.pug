@@ -11,7 +11,7 @@ block content
           .centered
             h5.label Net Profit:
           #total-summary
-            h1 ${{ net }}
+            h1(v-bind:class="[ net > 0 ? 'green' : 'red' ]") ${{ net }}
       hr
       .columns
         .column.col-4
@@ -23,13 +23,13 @@ block content
           h5.label Latest Closed Positions:
           ul
             closed-position-list-item(v-for="position in positions.closed",
-              v-bind:position="position")
+              v-bind:position="position", v-bind:class="[ position.net > 0 ? 'green' : 'red' ]")
 
   script.
     Vue.component('open-position-list-item', {
       props: ['position'],
       template: '<li>{{ position.pair }} {{ position.amount }} @ \
-        ${{ position.openPrice }} (${{ position.amount * position.openPrice }})</li>'
+        ${{ position.openPrice }} (${{ Math.round(position.amount * position.openPrice) }})</li>'
     })
 
     Vue.component('closed-position-list-item', {
@@ -38,8 +38,7 @@ block content
         {{ new Date(position.time) }}</small> <br />\
         {{ position.pair }} {{ position.amount }} @ \
         ${{ position.openPrice }}/{{ position.closePrice }} \
-        (${{ Math.round(position.amount * (position.closePrice - \
-        position.openPrice)) }})</div></li>"
+        (${{ Math.round(position.net) }})</div></li>"
     })
 
     let positions = new Vue({
