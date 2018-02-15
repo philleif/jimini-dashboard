@@ -22,7 +22,7 @@ block content
         .column.col-8
           h5.label Latest Closed Positions:
           ul
-            closed-position-list-item(v-for="position in positions.closed",
+            closed-position-list-item(v-for="position in positions.closed.slice(0,6)",
               v-bind:position="position", v-bind:class="[ position.net > 0 ? 'green' : 'red' ]")
 
   script.
@@ -35,7 +35,7 @@ block content
     Vue.component('closed-position-list-item', {
       props: ['position'],
       template: "<li><small class='text-gray'> \
-        {{ new Date(position.time) }}</small> <br />\
+        {{ `${new Date(position.time)}` }}</small> <br />\
         {{ position.pair }} {{ position.amount }} @ \
         ${{ position.openPrice }}/{{ position.closePrice }} \
         (${{ Math.round(position.net) }})</div></li>"
@@ -55,6 +55,7 @@ block content
             this.positions = response.data.positions
             this.time = Date()
             this.net = 0
+
             for (let p of this.positions.closed) {
               this.net += Math.round(p.amount * (p.closePrice - p.openPrice))
             }
