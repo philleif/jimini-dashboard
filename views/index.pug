@@ -13,6 +13,11 @@ block content
             h5.label Net Profit:
           #total-summary
             h1(v-bind:class="[ net > 0 ? 'green' : 'red' ]") ${{ net }}
+        .column.col-4
+          .centered
+            h5.label Hit Rate:
+          #total-summary
+            h1 {{ hitRate }}%
       hr
       .columns
         .column.col-4
@@ -30,7 +35,7 @@ block content
     Vue.component('open-position-list-item', {
       props: ['position'],
       template: '<li>{{ position.pair }} {{ position.amount }} @ \
-        ${{ position.openPrice }} (${{ Math.round(position.amount * position.openPrice) }})</li>'
+        ${{ Math.position.openPrice }} (${{ Math.round(position.amount * position.openPrice) }})</li>'
     })
 
     Vue.component('closed-position-list-item', {
@@ -45,26 +50,24 @@ block content
     let positions = new Vue({
       el: '#positions',
       data: {
-        positions: {closed: [], open: []},
+        positions: { closed: [], open: [] },
         net: 0,
         interval: null,
         time: null,
-        eta: null
+        eta: null,
+        hitRate: null
       },
       methods: {
         loadData: function () {
           axios.get('/positions').then(response => {
             this.positions = response.data.positions
             this.time = Date()
-            this.net = 0
-
-            for (let p of this.positions.closed) {
-              this.net += Math.round(p.amount * (p.closePrice - p.openPrice))
-            }
           })
 
-          axios.get('/jobs').then(response => {
-            this.eta = Math.round(response.data.jobs.next/1000) + ' seconds'
+          axios.get('/stats').then(response => {
+            this.eta = Math.round(response.data.stats.nextJob/1000) + ' seconds'
+            this.net = response.data.stats.net
+            this.hitRate = response.data.stats.hitRate
           })
         }
       },

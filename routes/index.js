@@ -5,16 +5,35 @@ const db = require("../lib/db")
 
 const router = express.Router()
 
-router.get("/jobs", async (req, res, next) => {
+router.get("/stats", async (req, res, next) => {
   let nextJob = await db.AgendaJob.findOne()
 
   let now = new Date()
   let nextTime = new Date(nextJob.nextRunAt)
   let eta = Math.abs(nextTime.getTime() - now.getTime())
 
+  let closedPositions = await db.Position.find({ status: "CLOSED" })
+
+  // net profit
+  let net = 0
+  for (let p of closedPositions) {
+    net += Math.round(p.amount * (p.closePrice - p.openPrice))
+  }
+
+  // hit rate
+  let hits = 0
+  for (let p of closedPositions) {
+    if (p.closePrice - p.openPrice > 0) {
+      hits++
+    }
+  }
+  let hitRate = Math.round((hits / closedPositions.length) * 100)
+
   res.json({
-    jobs: {
-      next: eta
+    stats: {
+      nextJob: eta,
+      hitRate: hitRate,
+      net: net
     }
   })
 })
