@@ -9,76 +9,70 @@ block content
         .centered
           h5.label Overall Performance:
         #total-summary
-          - if (positions.value > 0)
-            h1.green
-              = '$' + positions.value
-          - else
-            h1.red
-              = '$' + positions.value
-
+          h1 -
+          h5 -
     hr
-    h5.label Open Positions:
     .columns
-      .column.col-2
-    #open-positions
-      ul
-        position-list-item(v-for="position in positions", v-bind:position="position")
-    hr
+      .column.col-4
+        h5.label Open Positions:
+        #open-positions
+          ul
+            open-position-list-item(v-for="position in positions",
+              v-bind:position="position")
+      .column.col-8
+        h5.label Latest Closed Positions:
+        #closed-positions
+          ul
+            closed-position-list-item(v-for="position in positions",
+              v-bind:position="position")
 
-    h5.label Latest Closed Positions:
-    table.table
-      thead
-        tr
-          th Currency
-          th Amount
-          th Open Price
-          th Close Price
-          th Net
-          th Timeframe
-          th Time
-          th Exchange
-      tbody
-        - for(position of positions.closed)
-          - let netPrice = (position.closePrice - position.openPrice)
-          - if (netPrice > 0)
-            tr(class="green")
-              td= position.pair
-              td= position.amount
-              td= position.openPrice
-              td= position.closePrice
-              td= '$' + Math.round(position.amount * netPrice)
-              td= position.timeframe
-              td= position.time
-              td= position.exchange
-          - else
-            tr(class="red")
-              td= position.pair
-              td= position.amount
-              td= position.openPrice
-              td= position.closePrice
-              td= '$' + Math.round(position.amount * netPrice)
-              td= position.timeframe
-              td= position.time
-              td= position.exchange
   script.
-    Vue.component('position-list-item', {
+    Vue.component('open-position-list-item', {
       props: ['position'],
       template: '<li>{{ position.pair }} {{ position.amount }} @ \
-      ${{ position.open }} (${{ position.amount * position.open }})</li>'
+        ${{ position.openPrice }} (${{ position.amount * position.openPrice }})</li>'
     })
 
-    var app4 = new Vue({
+    Vue.component('closed-position-list-item', {
+      props: ['position'],
+      template: "<li><small class='text-gray'> \
+        {{ Date(position.time) }}</small> <br />\
+        {{ position.pair }} {{ position.amount }} @ \
+        ${{ position.openPrice }}/{{ position.closePrice }} \
+        (${{ Math.round(position.amount * (position.closePrice - \
+        position.openPrice)) }})</div></li>"
+    })
+
+    let closedPositions = new Vue({
+      el: '#closed-positions',
+      data: {
+        positions: []
+      },
+      methods: {
+        loadData: function () {
+          axios.get('/positions').then(response => {
+            this.positions = response.data.positions.closed
+          })
+        }
+      },
+      created: function () {
+        this.loadData()
+      }
+    })
+
+    let openPositions = new Vue({
       el: '#open-positions',
       data: {
-        positions: [
-          {
-            pair: 'tNEOUSD',
-            amount: 1,
-            timeframe: '15m',
-            time: '123',
-            open: 121,
-            total: 121
-          }
-        ]
+        positions: []
+      },
+      methods: {
+        loadData: function () {
+          axios.get('/positions').then(response => {
+            this.positions = response.data.positions.open
+          })
+        }
+      },
+      created: function () {
+        this.loadData()
       }
     })
