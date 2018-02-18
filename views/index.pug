@@ -34,15 +34,15 @@ block content
   script.
     Vue.component('open-position-list-item', {
       props: ['position'],
-      template: '<li>{{ position.pair }} {{ position.amount }} @ \
-        ${{ Math.position.openPrice }} (${{ Math.round(position.amount * position.openPrice) }})</li>'
+      template: '<li>[{{ position.orderCount }}] {{ position.pair }} {{ position.amount }} @ \
+        ${{ Math.round(position.openPrice) }} (${{ Math.round(position.amount * position.openPrice) }})</li>'
     })
 
     Vue.component('closed-position-list-item', {
       props: ['position'],
       template: "<li><small class='text-gray'> \
         {{ `${new Date(position.time)}` }}</small> <br />\
-        {{ position.pair }} {{ position.amount }} @ \
+        [{{ position.orderCount }}] {{ position.pair }} {{ position.amount }} @ \
         ${{ position.openPrice }}/{{ position.closePrice }} \
         (${{ Math.round(position.net) }})</div></li>"
     })

@@ -21,13 +21,18 @@ router.get("/stats", async (req, res, next) => {
   }
 
   // hit rate
-  let hits = 0
+  let hitOrders = 0
+  let totalOrders = 0
+
   for (let p of closedPositions) {
     if (p.closePrice - p.openPrice > 0) {
-      hits++
+      hitOrders += p.orderCount
     }
+    totalOrders += p.orderCount
   }
-  let hitRate = Math.round((hits / closedPositions.length) * 100)
+  console.log(hitOrders, totalOrders)
+
+  let hitRate = Math.round((hitOrders / totalOrders) * 100)
 
   res.json({
     stats: {
@@ -49,6 +54,7 @@ router.get("/positions", async (req, res, next) => {
       exchange: 1,
       openPrice: 1,
       closePrice: 1,
+      orderCount: 1,
       status: 1,
       net: 1,
       _id: 0
