@@ -6,7 +6,7 @@ const db = require("../lib/db")
 const router = express.Router()
 
 router.get("/stats", async (req, res, next) => {
-  let nextJob = await db.AgendaJob.findOne()
+  let nextJob = await db.AgendaJob.findOne({ name: "run loop" })
 
   let now = new Date()
   let nextTime = new Date(nextJob.nextRunAt)
@@ -32,7 +32,7 @@ router.get("/stats", async (req, res, next) => {
   }
   console.log(hitOrders, totalOrders)
 
-  let hitRate = Math.round((hitOrders / totalOrders) * 100)
+  let hitRate = Math.round(hitOrders / totalOrders * 100)
 
   res.json({
     stats: {
